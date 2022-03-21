@@ -26,6 +26,7 @@
     <ClCompile Include="goods.cpp" />
     <ClCompile Include="goods_extra.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="message.cpp" />
     <ClCompile Include="order.cpp" />
     <ClCompile Include="order_extra.cpp" />
     <ClCompile Include="user.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="order_extra.h" />
     <ClInclude Include="user.h" />
     <ClInclude Include="user_extra.h" />
+    <ClInclude Include="message.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

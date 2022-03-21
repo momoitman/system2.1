@@ -7,9 +7,9 @@ void admin_interface(Data& all_data) {
 	if (temp != "123456") { cout << "密码输入错误。" << endl; return; }
 	printf("\n-----登录成功！-----\n\n");
 	while (true) {
-		printf("====================================================================================\n");
-		printf("1.查看所有商品 2.搜索商品 3.下架商品 4.查看所有订单 5.查看所有用户 6.封禁用户 7.注销\n");
-		printf("====================================================================================\n\n");
+		printf("=====================================================================================================\n");
+		printf("1.查看所有商品 2.搜索商品 3.下架商品 4.查看所有订单 5.查看所有用户 6.封禁用户 7.注销 8.查看消息记录\n");
+		printf("=====================================================================================================\n\n");
 		printf("输入操作：");
 		cin >> temp;
 		if (temp == "7")break;
@@ -82,6 +82,49 @@ void admin_interface(Data& all_data) {
 				}
 			}
 			if (not_find)printf("未能找到该用户ID对应的用户！\n");
+		}
+		else if (temp == "8") {
+			printf("请问是否查看某个用户的留言记录？(y/n)：");
+			string k12;
+			while (true) {
+				cin >> k12;
+				if (k12 == "y")break;
+				if (k12 == "n")break;
+				printf("输入非法！请重新输入！");
+			}
+			if (k12 == "n") {
+				printf("*************************************************\n");
+				for (const Message& temp : all_data.all_message) {
+					printf("留言者ID：%s\n", temp.sender_id.c_str());
+					printf("留言者：%s\n", temp.sender_name.c_str());
+					printf("收留言者ID：%s\n", temp.receiver_id.c_str());
+					printf("收留言者：%s\n", temp.receiver_name.c_str());
+					printf("留言内容：%s\n\n\n", temp.message.c_str());
+				}
+				printf("*************************************************\n");
+			}
+			else if (k12 == "y") {
+				printf("请输入用户ID：");
+				string idid; cin >> idid;
+				bool find = false;
+				for (const User& temp : all_data.all_user) {
+					if (temp.id == idid) { find = true; break; }
+				}
+				if (!find) { printf("未查找到该用户ID对应的用户！\n"); }
+				if (find) {
+					printf("*************************************************\n");
+					for (const Message& temp : all_data.all_message) {
+						if (idid == temp.sender_id) {
+							printf("留言者ID：%s\n", temp.sender_id.c_str());
+							printf("留言者：%s\n", temp.sender_name.c_str());
+							printf("收留言者ID：%s\n", temp.receiver_id.c_str());
+							printf("收留言者：%s\n", temp.receiver_name.c_str());
+							printf("留言内容：%s\n\n\n", temp.message.c_str());
+						}
+					}
+					printf("*************************************************\n");
+				}
+			}
 		}
 		else printf("输入错误。\n");
 	}

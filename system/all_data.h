@@ -5,6 +5,7 @@
 #include"order.h"
 #include"user.h"
 #include"admin.h"
+#include"message.h"
 using namespace std;
 class Data {
 public:
@@ -13,4 +14,5 @@ public:
 	vector<User> all_user;
 	vector<string> all_command;
 	vector<string> all_recharge;
+	vector<Message> all_message;
 };

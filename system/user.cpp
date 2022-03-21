@@ -34,8 +34,12 @@ void user_register(vector<User>& all_user) {
 	printf("ÇëÊäÈëÃÜÂë£º");
 	cin >> user1.key;
 	printf("×¢²á³É¹¦£¡\n");
-	if (all_user.size() == 0)user1.id_int = 1;
-	else { int size = all_user.size(); user1.id_int = all_user[size - 1].id_int + 1; }
+	if (all_user.size() == 0) {
+		user1.id_int = 1;
+	}
+	else { 
+		int size = all_user.size(); user1.id_int = size + 1;
+	}
 	id_change(user1.id, user1.id_int);
 	user1.remain = true;
 	all_user.push_back(user1);

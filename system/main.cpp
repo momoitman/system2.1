@@ -26,10 +26,11 @@ void initial_all() {
 	FILE* p4 = fopen("calculate.txt", "w");
 	FILE* p5 = fopen("commands.txt", "w");
 	FILE* p6 = fopen("recharge.txt", "w");
+	FILE* p7 = fopen("message.txt", "w");
 	fprintf(p1, "商品ID,名称,价格,数量,描述,卖家ID,上架时间,商品状态\n");
 	fprintf(p3, "订单ID,商品ID,交易单价,数量,交易时间,卖家ID,买家ID\n");
 	fprintf(p2, "用户ID,用户名,密码,联系方式,地址,钱包余额,用户状态\n");
-	fclose(p1); fclose(p2); fclose(p3); fclose(p4); fclose(p5); fclose(p6);
+	fclose(p1); fclose(p2); fclose(p3); fclose(p4); fclose(p5); fclose(p6); fclose(p7);
 }
 void take(vector<Goods>&all_good) { 
 	string buffer; char temp[500] = "123";
@@ -104,6 +105,31 @@ void take(vector<string>& all_command,int) {
 		}
 	}
 }
+void take(vector<Message>& all_message) {
+	FILE* p1 = fopen("message.txt", "r");
+	if (p1 == NULL) { cerr << "聊天文件读取异常！\n"; return; }
+	char temp[300];
+	while (!feof(p1)) {
+		if (fgets(temp, 290, p1) != NULL) {
+			Message m;
+			m.sender_id = temp;
+			m.sender_id.pop_back();
+			fgets(temp, 290, p1);
+			m.sender_name = temp;
+			m.sender_name.pop_back();
+			fgets(temp, 290, p1);
+			m.receiver_id = temp;
+			m.receiver_id.pop_back();
+			fgets(temp, 290, p1);
+			m.receiver_name = temp;
+			m.receiver_name.pop_back();
+			fgets(temp, 290, p1);
+			m.message = temp;
+			m.message.pop_back();
+			all_message.push_back(m);
+		}
+	}
+}
 void take_all(Data&all_data) { 
 	//读取User
 	take(all_data.all_user);
@@ -111,16 +137,18 @@ void take_all(Data&all_data) {
 	take(all_data.all_goods);
 	take(all_data.all_command,1);
 	take(all_data.all_order);
+	take(all_data.all_message);
 }
 void update_data(const Data& all_data) {
-	FILE* p1 = fopen("commodity.txt", "w");FILE* p2 = fopen("user.txt", "w");
-	FILE* p3 = fopen("order.txt", "w");FILE* p4 = fopen("calculate.txt", "w");
+	FILE* p1 = fopen("commodity.txt", "w"); FILE* p2 = fopen("user.txt", "w");
+	FILE* p3 = fopen("order.txt", "w"); FILE* p4 = fopen("calculate.txt", "w");
 	FILE* p5 = fopen("commands.txt", "w"); FILE* p6 = fopen("recharge.txt", "w");
+	FILE* p7 = fopen("message.txt", "w");
 	fprintf(p1, "商品ID,名称,价格,数量,描述,卖家ID,上架时间,商品状态\n");
 	fprintf(p2, "用户ID,用户名,密码,联系方式,地址,钱包余额,用户状态\n");
 	fprintf(p3, "订单ID,商品ID,交易单价,数量,交易时间,卖家ID,买家ID\n");
 	for (const User& temp : all_data.all_user) {
-		string aa; aa = temp.remain==true ? "正常" : "封禁";
+		string aa; aa = temp.remain == true ? "正常" : "封禁";
 		fprintf(p2, "%s,%s,%s,%s,%s,%.lf,%s\n", temp.id.c_str(), temp.name.c_str(), temp.key.c_str(), temp.phone_num.c_str(), temp.address.c_str(), temp.deposit, aa.c_str());
 	}
 	for (const Goods& temp : all_data.all_goods) {
@@ -136,7 +164,10 @@ void update_data(const Data& all_data) {
 	for (const string& temp : all_data.all_recharge) {
 		fprintf(p6, "%s\n", temp.c_str());
 	}
-	fclose(p1); fclose(p2); fclose(p3); fclose(p4); fclose(p5); fclose(p6);
+	for (const Message& temp : all_data.all_message) {
+		fprintf(p7, "%s\n%s\n%s\n%s\n%s\n", temp.sender_id.c_str(),temp.sender_name.c_str(), temp.receiver_id.c_str(), temp.receiver_name.c_str(),temp.message.c_str());
+	}
+	fclose(p1); fclose(p2); fclose(p3); fclose(p4); fclose(p5); fclose(p6); fclose(p7);
 }
 int main() {
 	FILE* fp21 = fopen("commodity.txt", "r");
@@ -181,6 +212,5 @@ int main() {
 		if (init__) { printf("=====重置成功！请重新打开平台。=====\n"); break; }
 	}
 	if(not init__)update_data(all_data);
-	system("pause");
 	return 0;
 }

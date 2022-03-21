@@ -3,9 +3,9 @@
 #include"calculate.h"
 void user_information(User& user,Data& all_data) {
 	while (true) {
-		printf("==============================================\n");
-		printf("1.查看信息 2.修改信息 3.充值 4.返回用户主界面\n");
-		printf("==============================================\n");
+		printf("=====================================================================================\n");
+		printf("1.查看信息 2.修改信息 3.充值 4.返回用户主界面 5.给他人发送留言 6.查看发送给自己的留言\n");
+		printf("======================================================================================\n");
 		printf("请输入你的操作:");
 		string buffer; cin >> buffer;
 		if (buffer == "4")break;
@@ -38,7 +38,7 @@ void user_information(User& user,Data& all_data) {
 			printf("***************************************************************************************************************\n\n\n");
 		}
 		else if (buffer == "2") {
-			printf("请选择修改的属性（1.用户名 2.联系方式 3.地址）：");
+			printf("请选择修改的属性（1.用户名 2.联系方式 3.地址 4.密码）：");
 			string buffer2; cin >> buffer2;
 			if (buffer2 == "2") {
 				printf("请输入修改后的联系方式：");
@@ -57,7 +57,58 @@ void user_information(User& user,Data& all_data) {
 				}
 				if (success)user.name = name_;
 			}
+			else if (buffer2 == "4") {
+				printf("请输入修改后的密码：");
+				cin >> user.key;
+			}
 			else printf("输入有误！\n");
+		}
+		else if (buffer == "5") {
+			printf("请输入你要发送对象的ID：");
+			string input2; cin >> input2;
+			if (input2 == user.id) { printf("您不能给自己留言！\n\n"); continue; }
+			bool not_find = true;
+			User find;
+			for (const User& temp : all_data.all_user) {
+				if (input2 == temp.id) { not_find = false; find = temp; break; }
+			}
+			if (not_find) { printf("未找到该ID对应的用户！\n\n"); continue; }
+			if (find.remain == false) { printf("该用户已被封禁！\n\n"); continue; }
+			printf("请输入你的留言：");
+			Message new1; 
+			fflush(stdin);
+			char kkk[300]; cin.getline(kkk, 300);
+			getline(cin,new1.message);
+			new1.receiver_id = find.id; new1.receiver_name = find.name;
+			new1.sender_id = user.id; new1.sender_name = user.name;
+			printf("*******************************************************\n");
+			printf("留言对象：%s\n", find.name.c_str());
+			printf("留言对象ID：%s\n", find.id.c_str());
+			printf("留言内容：%s\n", new1.message.c_str());
+			printf("*******************************************************\n");
+			printf("请问是否发送？(y/n)");
+			string iii;
+			while (true) {
+				cin >> iii;
+				if (iii == "y")break;
+				if (iii == "n")break;
+				printf("输入非法，请重新输入！\n");
+			}
+			if (iii == "y") {
+				all_data.all_message.push_back(new1);
+				printf("发送成功！\n");
+			}
+			else printf("取消成功！\n");
+		}
+		else if (buffer == "6") {
+			printf("*********************************************************\n");
+			for (const Message& temp : all_data.all_message) {
+				if (temp.receiver_id == user.id) {
+					printf("%s(%s):\n", temp.sender_name.c_str(), temp.sender_id.c_str());
+					printf("%s\n", temp.message.c_str());
+				}
+			}
+			printf("*********************************************************\n");
 		}
 		else printf("输入错误！\n");
 	}
